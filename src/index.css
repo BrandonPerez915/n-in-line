@@ -1,0 +1,78 @@
+:root {
+  --dark-blue: #1c3144;
+  --ligth-blue: #3f88c5;
+  --red: #d00000;
+  --yellow: #ffba08;
+  --gray: #a2aebb;
+  --white: #f0f0f0;
+}
+
+* {
+  border: 1px solid black;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: PT Sans, sans-serif;
+  background-color: var(--white);
+}
+
+.board {
+  min-width: 100dvw;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.select-game-menu {
+  max-width: 400px;
+  min-width: 280px;
+  width: 70%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+  place-items: center center;
+}
+
+.card, .cell {
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.piece {
+  width: 80%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+}
+
+.game-board {
+  min-width: 270px;
+  width: 35%;
+  min-height: 200px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  place-items: center;
+}
+
+.hide {
+  display: none;
+}
+
+.red {
+  background-color: var(--red);
+}
+
+.blue {
+  background-color: var(--ligth-blue);
+}
+
+#cell-0 {
+  background-color: red;
+}
