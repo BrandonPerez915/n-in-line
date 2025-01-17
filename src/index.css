@@ -72,7 +72,3 @@ body {
 .blue {
   background-color: var(--ligth-blue);
 }
-
-#cell-0 {
-  background-color: red;
-}
