@@ -25,6 +25,30 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  gap: 30px;
+}
+
+.board-header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 70%;
+  gap: 20px;
+}
+
+.current-turn-container {
+  width: 14%;
+  min-width: 70px;
+  max-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.current-turn {
+  display: flex;
+  width: 100%;
+  gap: 10px;
 }
 
 .select-game-menu {
@@ -46,6 +70,10 @@ body {
   align-items: center;
 }
 
+.cell:hover {
+  cursor: pointer;
+}
+
 .piece {
   width: 80%;
   aspect-ratio: 1/1;
@@ -65,10 +93,23 @@ body {
   display: none;
 }
 
+.disabled {
+  pointer-events: none;
+}
+
 .red {
   background-color: var(--red);
 }
 
 .blue {
   background-color: var(--ligth-blue);
+}
+
+.current-turn-card {
+  display: flex;
+  gap: 10px;
+}
+
+.winner-container {
+  text-align: center;
 }

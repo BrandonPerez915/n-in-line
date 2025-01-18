@@ -5,6 +5,7 @@ import { Cell } from './components/Cell.jsx'
 import { useState, useEffect } from 'react'
 
 import { OPTIONS, TURNS } from './utils/constants.js'
+import confetti from 'canvas-confetti'
 
 //Registro de celdas coloreadas para evitar duplicados y renderizaciones 
 //innecesarias
@@ -24,6 +25,8 @@ function App() {
 
   const [winner, setWinner] = useState(null)
 
+  const gameBoard = document.querySelector('.game-board')
+
   const changeCardState = (num) => {
     setOptionSelect(!optionSelect)
     setMode(num)
@@ -36,6 +39,7 @@ function App() {
     setMode(null)
     setBoard([null])
     setWinner(null)
+    gameBoard.classList.remove('disabled')
   }
 
   const resetGame = () => {
@@ -43,6 +47,7 @@ function App() {
     setTurn(TURNS[0])
     setBoard(generateBoard(mode))
     setWinner(null)
+    gameBoard.classList.remove('disabled')
   }
 
   const generateBoard = (n) => {
@@ -54,10 +59,12 @@ function App() {
     for(let currentIndex of coloredRedCells) {
       const cell = document.getElementById(`cell-${currentIndex}`)
       cell.classList.remove('red')
+      cell.classList.remove('disabled')
     }
     for(let currentIndex of coloredBlueCells) {
       const cell = document.getElementById(`cell-${currentIndex}`)
       cell.classList.remove('blue')
+      cell.classList.remove('disabled')
     }
     coloredRedCells = []
     coloredBlueCells = []
@@ -70,8 +77,11 @@ function App() {
   }, [mode])
 
   function draw(index) {
-    if(checkWinner(board, mode)) {
-      setWinner(checkWinner(board, mode))
+    const win = checkWinner(board, mode)
+    if(win) {
+      setWinner(win);
+      confetti()
+      gameBoard.classList.add('disabled')
       return
     }
 
@@ -94,7 +104,7 @@ function App() {
     }
     //dibujar las piezas en el tablero
     for(let i = 0; i < mode; i++) {
-      //ubicar la celda actual
+      //ubicar la celda\\\ actual
       let currentIndex = mode ** 2 - (mode - i)
       //recorrer la columna de abajo hacia arriba
       for(let j = mode - 1; j >= 0; j--) {
@@ -103,10 +113,12 @@ function App() {
 
         if(newBoard[j][i] === 'r' && !coloredRedCells.includes(currentIndex)) {
           cell.classList.add('red')
+          cell.classList.add('disabled')
           coloredRedCells.push(currentIndex)
         }
         else if(newBoard[j][i] === 'b' && !coloredBlueCells.includes(currentIndex)) {
           cell.classList.add('blue')
+          cell.classList.add('disabled')
           coloredBlueCells.push(currentIndex)
         }
         currentIndex -= mode
@@ -156,19 +168,52 @@ function App() {
         }
       }
     }
-    return null;
+    return undefined;
   }
 
   //Renderizado
   return (
     <main className='board'>
       <header className='board-header'>
-        <button 
-          className='select-mode-button'
-          onClick={ showOptions }
+        <CardsContainer 
+          className='select-mode-button-container'
+          optionSelected={ !optionSelect }
         >
-          Select game mode
-        </button>
+          <button 
+            className='select-mode-button'
+            onClick={ showOptions }
+          >
+            Select game mode
+          </button>
+        </CardsContainer>
+
+        {
+          !optionSelect ? 'Select a board' : ''
+        }
+
+        <CardsContainer 
+        className='current-turn-container' 
+        optionSelected={ !optionSelect }>
+          <button
+            className='reset-button'
+            onClick={ resetGame }
+          >
+            Reset game
+          </button>
+          <div className='current-turn-card'>
+            { !winner ?
+              <div className='current-turn'>
+                <div className={ `piece${turn === 'r' ? ' red':''}` }>
+                </div>
+                <div className={ `piece${turn === 'b' ? ' blue':''}` }>
+                </div> 
+              </div> :
+              <div className='winner-container'>
+                { winner !== undefined ? `Player ${ winner === 'r' ? 'red':'blue'} Wins!` : 'It\'s a tie!' }
+              </div>
+            }
+          </div>
+        </CardsContainer>
       </header>
       <CardsContainer 
         className='select-game-menu' 
@@ -202,19 +247,6 @@ function App() {
           })
         }
       </CardsContainer>
-      <footer>
-        <button
-          className='reset-button'
-          onClick={ resetGame }
-        >
-          Reset game
-        </button>
-        <div className='current-turn-card'>
-          { winner &&
-            <p>{ winner === 'r' ? 'Red' : 'Blue' } wins!</p>
-          }
-        </div>
-      </footer>
     </main>
   )
 }
